@@ -79,17 +79,25 @@
 
 
 
-<meta name="description" content="mac升级自带的PHP版本php –version   →查看当前版本curl -s http://php-osx.liip.ch/install.sh | bash -s 7.0 →安装指定版本 如果当前本机有旧版本，那么新版本不会覆盖原版本，需要手动替换掉旧版本，如下： sudo vi ~/.bashrc → 修改系统环境变量增加下面语句export PATH=”/usr/local/bin:">
+<meta name="description" content="title:快扔掉你那辣眼睛的shell Part1zsh 安装教程如果你是全新的Macbook 或者苹果的Mac产品，那么你需要在你的电脑上先安装 Homebrew。 实际上，你的Mac会自带一些基础的开发工具，这其中就包括了zsh，不过一般不会是最新版本，在本机安装了homebrew之后，我们都会通过homebrew来安装以及更新这些软件。  brew install zsh  安装成功以后">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mac升级本机自带PHP的版本">
-<meta property="og:url" content="http://yoursite.com/2017/08/18/Mac升级本机自带的PHP/index.html">
+<meta property="og:title" content="Code&#39;s punchline">
+<meta property="og:url" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/index.html">
 <meta property="og:site_name" content="Code&#39;s punchline">
-<meta property="og:description" content="mac升级自带的PHP版本php –version   →查看当前版本curl -s http://php-osx.liip.ch/install.sh | bash -s 7.0 →安装指定版本 如果当前本机有旧版本，那么新版本不会覆盖原版本，需要手动替换掉旧版本，如下： sudo vi ~/.bashrc → 修改系统环境变量增加下面语句export PATH=”/usr/local/bin:">
+<meta property="og:description" content="title:快扔掉你那辣眼睛的shell Part1zsh 安装教程如果你是全新的Macbook 或者苹果的Mac产品，那么你需要在你的电脑上先安装 Homebrew。 实际上，你的Mac会自带一些基础的开发工具，这其中就包括了zsh，不过一般不会是最新版本，在本机安装了homebrew之后，我们都会通过homebrew来安装以及更新这些软件。  brew install zsh  安装成功以后">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-01T06:36:11.000Z">
+<meta property="og:image" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/media/15157448930655/15158186350245.png">
+<meta property="og:image" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/media/15157448930655/15158606320475.png">
+<meta property="og:image" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/media/15157448930655/15158606968405.png">
+<meta property="og:image" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/media/15157448930655/15159505792096.png">
+<meta property="og:image" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/media/15157448930655/15159501120447.png">
+<meta property="og:image" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/media/15157448930655/15159507116034.png">
+<meta property="og:image" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/media/15157448930655/15159518796656.png">
+<meta property="og:updated_time" content="2018-03-04T16:17:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mac升级本机自带PHP的版本">
-<meta name="twitter:description" content="mac升级自带的PHP版本php –version   →查看当前版本curl -s http://php-osx.liip.ch/install.sh | bash -s 7.0 →安装指定版本 如果当前本机有旧版本，那么新版本不会覆盖原版本，需要手动替换掉旧版本，如下： sudo vi ~/.bashrc → 修改系统环境变量增加下面语句export PATH=”/usr/local/bin:">
+<meta name="twitter:title" content="Code&#39;s punchline">
+<meta name="twitter:description" content="title:快扔掉你那辣眼睛的shell Part1zsh 安装教程如果你是全新的Macbook 或者苹果的Mac产品，那么你需要在你的电脑上先安装 Homebrew。 实际上，你的Mac会自带一些基础的开发工具，这其中就包括了zsh，不过一般不会是最新版本，在本机安装了homebrew之后，我们都会通过homebrew来安装以及更新这些软件。  brew install zsh  安装成功以后">
+<meta name="twitter:image" content="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/media/15157448930655/15158186350245.png">
 
 
 
@@ -119,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/18/Mac升级本机自带的PHP/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/"/>
 
 
 
 
 
-  <title>Mac升级本机自带PHP的版本 | Code's punchline</title>
+  <title> | Code's punchline</title>
   
 
 
@@ -232,7 +240,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/18/Mac升级本机自带的PHP/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vayne Yao">
@@ -249,7 +257,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Mac升级本机自带PHP的版本</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -261,8 +269,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-18T11:39:43+08:00">
-                2017-08-18
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T16:14:53+08:00">
+                2018-01-12
               </time>
             
 
@@ -299,10 +307,38 @@
       
 
       
-        <h1 id="mac升级自带的PHP版本"><a href="#mac升级自带的PHP版本" class="headerlink" title="mac升级自带的PHP版本"></a>mac升级自带的PHP版本</h1><p>php –version   →查看当前版本<br>curl -s <a href="http://php-osx.liip.ch/install.sh" target="_blank" rel="noopener">http://php-osx.liip.ch/install.sh</a> | bash -s 7.0 →安装指定版本</p>
-<p><em>如果当前本机有旧版本，那么新版本不会覆盖原版本，需要手动替换掉旧版本，如下：</em></p>
-<p>sudo vi ~/.bashrc → 修改系统环境变量<br><em>增加下面语句</em><br>export PATH=”/usr/local/bin:/usr/local/sbin:$PATH”</p>
-<p>OK，结束</p>
+        <hr>
+<h2 id="title-快扔掉你那辣眼睛的shell-Part1"><a href="#title-快扔掉你那辣眼睛的shell-Part1" class="headerlink" title="title:快扔掉你那辣眼睛的shell Part1"></a>title:快扔掉你那辣眼睛的shell Part1</h2><h3 id="zsh-安装教程"><a href="#zsh-安装教程" class="headerlink" title="zsh 安装教程"></a>zsh 安装教程</h3><p>如果你是全新的Macbook 或者苹果的Mac产品，那么你需要在你的电脑上先安装 <em>Homebrew</em>。</p>
+<p>实际上，你的Mac会自带一些基础的开发工具，这其中就包括了<em>zsh</em>，不过一般不会是最新版本，在本机安装了homebrew之后，我们都会通过homebrew来安装以及更新这些软件。</p>
+<blockquote>
+<p>brew install zsh<br><img src="media/15157448930655/15158186350245.png" alt=""></p>
+</blockquote>
+<p>安装成功以后可以通过下面这个命令查看</p>
+<blockquote>
+<p>zsh –version<br><img src="media/15157448930655/15158606320475.png" alt=""></p>
+</blockquote>
+<p>另外多说一句，<code>zsh --version</code>是显示你机子上的zsh版本，并不意味着你使用的就是这个版本，如果需要查看你当前使用的zsh版本，可以通过下面这个命令查看</p>
+<blockquote>
+<p>echo $ZSH_VERSION<br><img src="media/15157448930655/15158606968405.png" alt=""></p>
+</blockquote>
+<p>完成安装以后，我们需要修改默认的shell，将其改为zsh，</p>
+<p>先运行命令</p>
+<blockquote>
+<p>open /etc/shells<br><img src="media/15157448930655/15159505792096.png" alt=""></p>
+</blockquote>
+<p>打开shells的文档，发现最后一行已经有了/bin/zsh，说明zsh已经被写入到了shell文件中，如果没有/bin/zsh，则需要我们手动在文件末尾添加/bin/zsh，如下图（示例）</p>
+<blockquote>
+<p><img src="media/15157448930655/15159501120447.png" alt=""></p>
+</blockquote>
+<p>保存好shells文件后，我们执行以下命令</p>
+<blockquote>
+<p>chsh -s /usr/local/bin/zsh<br><img src="media/15157448930655/15159507116034.png" alt=""></p>
+</blockquote>
+<p>告诉电脑以后使用zsh作为你的shell，然后，我们重新打开命令行工具，如下图显示即表示zsh安装成功</p>
+<blockquote>
+<p><img src="media/15157448930655/15159518796656.png" alt=""></p>
+</blockquote>
+<p>#####下一期会给大家带来zsh的一个标配开源配置管理框架 -&gt; <em>oh-my-zsh</em>，它提供了大量实用的功能，主题等。</p>
 
       
     </div>
@@ -327,8 +363,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/17/正则学习笔记/" rel="next" title="正则学习笔记">
-                <i class="fa fa-chevron-left"></i> 正则学习笔记
+              <a href="/2017/12/28/How-to-make-graceful-ppt/" rel="next" title="How to make graceful ppt">
+                <i class="fa fa-chevron-left"></i> How to make graceful ppt
               </a>
             
           </div>
@@ -337,8 +373,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/09/28/几个好玩的动画库/" rel="prev" title="几个好玩的动画库">
-                几个好玩的动画库 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/01/15/Zsh-添加环境变量示例/" rel="prev" title="Zsh 添加环境变量示例">
+                Zsh 添加环境变量示例 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -462,7 +498,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mac升级自带的PHP版本"><span class="nav-number">1.</span> <span class="nav-text">mac升级自带的PHP版本</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title-快扔掉你那辣眼睛的shell-Part1"><span class="nav-number">1.</span> <span class="nav-text">title:快扔掉你那辣眼睛的shell Part1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#zsh-安装教程"><span class="nav-number">1.1.</span> <span class="nav-text">zsh 安装教程</span></a></li></ol></li></ol></div>
             
 
           </div>

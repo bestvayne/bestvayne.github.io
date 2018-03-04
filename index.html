@@ -354,6 +354,912 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/09/Mac下通过DMG文件安装MySQL之后。。。。/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vayne Yao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code's punchline">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/09/Mac下通过DMG文件安装MySQL之后。。。。/" itemprop="url">Mac下通过DMG文件安装MySQL之后。。。。</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-09T11:47:01+08:00">
+                2018-02-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Mac下通过DMG文件安装MySQL-之后。。。。"><a href="#Mac下通过DMG文件安装MySQL-之后。。。。" class="headerlink" title="Mac下通过DMG文件安装MySQL 之后。。。。"></a>Mac下通过DMG文件安装MySQL 之后。。。。</h1><p>你可能会遇到这两个头疼的提示：</p>
+<h6 id="error1"><a href="#error1" class="headerlink" title="error1"></a>error1</h6><pre><code>Unable to connect to host 127.0.0.1 because access was denied.
+
+Double-check your username and password and ensure that access from your current location is permitted.
+
+MySQL said: Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES)
+</code></pre><h6 id="error2"><a href="#error2" class="headerlink" title="error2"></a>error2</h6><pre><code>Unable to connect to host 127.0.0.1, or the request timed out.
+
+Be sure that the address is correct and that you have the necessary privileges, or try increasing the connection timeout (currently 10 seconds).
+
+MySQL said: Your password has expired. To log in you must change it using a client that supports expired passwords.
+</code></pre><p>不是每个人都会碰到这个问题，但是我确实都碰到了，这里面坑也比较多，独立解决这些问题，也是对你本身基础知识的一次检查，所以我更倾向于大家先独立排查，如果还是没解决再来看下文。另外说一句，如果你是在laravel官方推荐的Homestead环境中的话，可能不会碰到这几个问题。但是我是一个比较爱折腾的人，特别喜欢debug，特别喜欢在命令行里敲东西，所以也顺便解决了这个问题，给大家分享一下。</p>
+<p>首先，我们来重现一下从安装MySQL开始的整个过程。</p>
+<p>1、在mysql官网下载MySQL的dmg安装包：<a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">https://dev.mysql.com/downloads/mysql/</a></p>
+<p>2、dmg文件下载好之后，双击安装，注意到最后一步的时候，会弹出一个提示框：</p>
+<p><img src="media/15181480218838/15181497369230.jpg" alt=""><br>root@localhost 后面的W:ivGGB5lrdS 这个是MySQL安装时给你的初始密码，这个很重要，一定要记下来。</p>
+<p>3、启动MySQL：<br>进入Mac的<em>系统偏好设置</em></p>
+<p><img src="media/15181480218838/15181502168075.jpg" alt=""></p>
+<p><img src="media/15181480218838/15181502312933.jpg" alt=""></p>
+<p>4、启好MySQL之后，我选择了<a href="http://www.sequelpro.com/download" target="_blank" rel="noopener">Sequel pro</a>这个软件来操作数据库。<br>    <img src="media/15181480218838/15181501037645.jpg" alt=""></p>
+<p>这时候，就会出现之前的两个错误，<br>其中前文提到的<em>error1</em>的意思是你的MySQL 账号密码有错，我一开始在laravel项目的.env文件中设置好了数据库相关的配置，所以直接输入的是.env文件中的配置，然后就会提示</p>
+<pre><code>Unable to connect to host 127.0.0.1 because access was denied.
+
+Double-check your username and password and ensure that access from your current location is permitted.
+
+MySQL said: Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES)
+</code></pre><p>另外<em>error2</em>的错误中，错误提示的字面意思是：<br>password has expired，其实意思是你不可以用刚才安装好MySQL的初始密码登录，你需要在重置你的MySQL密码，然后用新密码来登录root账户，接下来我们来解决这个问题。</p>
+<p>首先在命令行模式下输入MySQL</p>
+<p><img src="media/15181480218838/15181506934906.jpg" alt=""></p>
+<p>不出意外的话，你会看到一个提示</p>
+<pre><code>mysql command not found 
+</code></pre><p>这是因为我们是通过dmg文件包的形式安装的MySQL，系统不知道MySQL这个东西，我们需要在bash文件中加入MySQL路径（我的命令行工具使用的是zsh,每个人用的不一样，但是思路是一样的，就是在bash文件中加入MySQL路径）<br>先打开bash文件，然后添加MySQL路径。<br><img src="media/15181480218838/15181509243398.jpg" alt=""></p>
+<p>在打开的文件中输入下面这行命令，保存后退出即可在命令行中使用MySQL命令。</p>
+<pre><code>export PATH=$PATH:/usr/local/mysql/bin
+</code></pre><p><img src="media/15181480218838/15181509839110.jpg" alt=""></p>
+<p>之后，我们需要重置MySQL root 账户的密码，在命令行中输入</p>
+<pre><code>mysql -u root -p
+</code></pre><p>然后输入MySQL提供的那个初始密码，如果出现如下提示，说明我们进入了MySQL的设置项</p>
+<p><img src="media/15181480218838/15181515990661.jpg" alt=""></p>
+<p>这时，我们在    mysql &gt;后面输入</p>
+<pre><code>SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;你想要设置的root账户的新密码&apos;);
+</code></pre><p>当看到<img src="media/15181480218838/15181521852325.jpg" alt=""></p>
+<p>就表示重置密码成功，然后我们打开Sequel pro输入root账号和新密码时，就可以使用了。</p>
+<p><img src="media/15181480218838/15181522436226.jpg" alt=""></p>
+<p><img src="media/15181480218838/15181522593218.jpg" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/02/06/php-基本知识/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vayne Yao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code's punchline">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/02/06/php-基本知识/" itemprop="url">php 基本知识</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-06T20:33:49+08:00">
+                2018-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="php-基本知识"><a href="#php-基本知识" class="headerlink" title="php 基本知识"></a>php 基本知识</h1><p>-&gt; 表示调用class 中的属性<br>:: 表示调用class 中的方法</p>
+<p>example: </p>
+<pre><code>$xx-&gt;yy  对象 xx 的 yy 属性
+$xx-&gt;zz() 对象 xx 的 zz 方法
+
+
+class name (){
+    //定义一个属性 值为字符串 vayne
+    public $name = &quot;vayne&quot;;
+    //定义一个方法 answer()
+    public function question(){
+        echo &quot;my name is :&quot; $name;
+    }
+}
+//实例化 一个类；
+$obj = new name();
+//调用类中的属性name
+echo $obj -&gt;name;//输出vayne;
+//调用类中的方法并传入一个参数
+$obj -&gt;answer(&apos;姚曦&apos;);
+
+    &lt;?php
+
+// 费了我好大功夫, 把这些都总结到一个例子里面了
+// PHP5.3 PHP5.4 PHP5.5 测试通过
+
+class A
+{
+    //类常量
+    const constValue = &quot;constValue\n&quot;;
+
+    //类属性
+    public $property = &quot;properties\n&quot;;
+
+    //静态属性
+    static public $staticProperty = &quot;staticProperty\n&quot;;
+
+    //普通函数
+    public function func()
+    {
+
+    }
+
+    //静态函数
+    static public function staticFunc()
+    {
+
+    }
+}
+
+$xxoo = new A;
+//访问实例的属性
+print $xxoo-&gt;property;
+//访问实例的函数
+print $xxoo-&gt;func();
+
+//也可以借助实例来访问静态成员
+//访问函数要用箭头，属性要用双冒号
+print $xxoo-&gt;staticFunc();
+print $xxoo::$staticProperty;
+
+//如果不借助实例，那就直接用类名加双冒号
+print A::staticFunc();
+print A::constValue;
+//静态属性要加美元符号
+print A::$staticProperty;
+
+
+
+//继承类A
+class B extends A
+{
+    //覆盖父类的属性
+    public $property = &quot;covered-properties\n&quot;;
+
+    //覆盖父类的静态属性
+    static public $staitcProperty = &quot;covered-staitcProperties\n&quot;;
+
+    //覆盖父类的函数
+    public function func()
+    {
+        //访问自己的属性
+        print $this-&gt;property;
+        //访问从父类继承来的静态属性
+        print self::$staticProperty;
+
+        //访问自己的(静态)函数
+        print $this-&gt;staticFunc();
+        //强制指定访问父类(而不是自己)的函数
+        print parent::func();
+    }
+
+    //覆盖父类的静态函数
+    static public function staticFunc()
+    {
+        //因为没有$this, 所以用self访问自己的静态属性
+        print self::$staitcProperty;
+    }
+}
+
+//运行一下上面的例子
+$xxoo = new B;
+$xxoo-&gt;func();
+B::staticFunc();
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/17/electron-打包为dmg文件/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vayne Yao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code's punchline">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/17/electron-打包为dmg文件/" itemprop="url">electron 打包为dmg文件</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-17T20:41:20+08:00">
+                2018-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="electron-打包"><a href="#electron-打包" class="headerlink" title="electron 打包"></a>electron 打包</h2><p> 先安装 package 打包工具</p>
+<p> <code>npm install electron-package -g</code></p>
+<p> 在当前目录下运行</p>
+<p> <code>electron-packager .</code></p>
+<p>生成 appname-darwin-x64文件夹，文件夹中会生成应用app（类似于安装Atom时的状态），直接将文件移入Mac中的Application，双击打开即可使用</p>
+<h2 id="打包为dmg文件"><a href="#打包为dmg文件" class="headerlink" title="打包为dmg文件"></a>打包为dmg文件</h2><p>先安装 dmg 文件打包工具<br><code>npm i electron-installer-dmg -g</code></p>
+<p>之后执行命令生成dmg文件</p>
+<p><code>electron-installer-dmg [appname-darwin-x64路径] [生成的dmg文件名称]</code></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/16/15160691536191/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vayne Yao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code's punchline">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/16/15160691536191/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-16T10:19:13+08:00">
+                2018-01-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="快扔掉你那辣眼睛的shell-Part2"><a href="#快扔掉你那辣眼睛的shell-Part2" class="headerlink" title="快扔掉你那辣眼睛的shell Part2"></a>快扔掉你那辣眼睛的shell Part2</h2><h3 id="oh-my-zsh的安装和介绍"><a href="#oh-my-zsh的安装和介绍" class="headerlink" title="oh-my-zsh的安装和介绍"></a>oh-my-zsh的安装和介绍</h3>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/15/Zsh-添加环境变量示例/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vayne Yao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code's punchline">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/15/Zsh-添加环境变量示例/" itemprop="url">Zsh 添加环境变量示例</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-15T00:45:54+08:00">
+                2018-01-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>给 Linux/Unix 系统增加环境变量，是使用 export 命令。</p>
+<p>为了永久性生效，则需要考虑加入到登录的 profile中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export PATH=$HOME/.composer/vendor/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/12/快扔掉你那辣眼睛的shell-Part1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vayne Yao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Code's punchline">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/12/快扔掉你那辣眼睛的shell-Part1/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-12T16:14:53+08:00">
+                2018-01-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <hr>
+<h2 id="title-快扔掉你那辣眼睛的shell-Part1"><a href="#title-快扔掉你那辣眼睛的shell-Part1" class="headerlink" title="title:快扔掉你那辣眼睛的shell Part1"></a>title:快扔掉你那辣眼睛的shell Part1</h2><h3 id="zsh-安装教程"><a href="#zsh-安装教程" class="headerlink" title="zsh 安装教程"></a>zsh 安装教程</h3><p>如果你是全新的Macbook 或者苹果的Mac产品，那么你需要在你的电脑上先安装 <em>Homebrew</em>。</p>
+<p>实际上，你的Mac会自带一些基础的开发工具，这其中就包括了<em>zsh</em>，不过一般不会是最新版本，在本机安装了homebrew之后，我们都会通过homebrew来安装以及更新这些软件。</p>
+<blockquote>
+<p>brew install zsh<br><img src="media/15157448930655/15158186350245.png" alt=""></p>
+</blockquote>
+<p>安装成功以后可以通过下面这个命令查看</p>
+<blockquote>
+<p>zsh –version<br><img src="media/15157448930655/15158606320475.png" alt=""></p>
+</blockquote>
+<p>另外多说一句，<code>zsh --version</code>是显示你机子上的zsh版本，并不意味着你使用的就是这个版本，如果需要查看你当前使用的zsh版本，可以通过下面这个命令查看</p>
+<blockquote>
+<p>echo $ZSH_VERSION<br><img src="media/15157448930655/15158606968405.png" alt=""></p>
+</blockquote>
+<p>完成安装以后，我们需要修改默认的shell，将其改为zsh，</p>
+<p>先运行命令</p>
+<blockquote>
+<p>open /etc/shells<br><img src="media/15157448930655/15159505792096.png" alt=""></p>
+</blockquote>
+<p>打开shells的文档，发现最后一行已经有了/bin/zsh，说明zsh已经被写入到了shell文件中，如果没有/bin/zsh，则需要我们手动在文件末尾添加/bin/zsh，如下图（示例）</p>
+<blockquote>
+<p><img src="media/15157448930655/15159501120447.png" alt=""></p>
+</blockquote>
+<p>保存好shells文件后，我们执行以下命令</p>
+<blockquote>
+<p>chsh -s /usr/local/bin/zsh<br><img src="media/15157448930655/15159507116034.png" alt=""></p>
+</blockquote>
+<p>告诉电脑以后使用zsh作为你的shell，然后，我们重新打开命令行工具，如下图显示即表示zsh安装成功</p>
+<blockquote>
+<p><img src="media/15157448930655/15159518796656.png" alt=""></p>
+</blockquote>
+<p>#####下一期会给大家带来zsh的一个标配开源配置管理框架 -&gt; <em>oh-my-zsh</em>，它提供了大量实用的功能，主题等。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/28/How-to-make-graceful-ppt/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -791,6 +1697,10 @@
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -834,7 +1744,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
