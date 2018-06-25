@@ -10,14 +10,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Greet]]></title>
-    <url>%2F2018%2F02%2F27%2Fhello-world%2F</url>
-    <content type="text"><![CDATA[Perhaps very boring,but this is way the front end needs one stepped pit ^-^]]></content>
-      <tags>
-        <tag>感想</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[Mac下通过DMG文件安装MySQL之后。。。。]]></title>
     <url>%2F2018%2F02%2F09%2FMac%E4%B8%8B%E9%80%9A%E8%BF%87DMG%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85MySQL%E4%B9%8B%E5%90%8E%E3%80%82%E3%80%82%E3%80%82%E3%80%82%2F</url>
     <content type="text"><![CDATA[Mac下通过DMG文件安装MySQL 之后。。。。你可能会遇到这两个头疼的提示： error1Unable to connect to host 127.0.0.1 because access was denied. Double-check your username and password and ensure that access from your current location is permitted. MySQL said: Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES) error2Unable to connect to host 127.0.0.1, or the request timed out. Be sure that the address is correct and that you have the necessary privileges, or try increasing the connection timeout (currently 10 seconds). MySQL said: Your password has expired. To log in you must change it using a client that supports expired passwords. 不是每个人都会碰到这个问题，但是我确实都碰到了，这里面坑也比较多，独立解决这些问题，也是对你本身基础知识的一次检查，所以我更倾向于大家先独立排查，如果还是没解决再来看下文。另外说一句，如果你是在laravel官方推荐的Homestead环境中的话，可能不会碰到这几个问题。但是我是一个比较爱折腾的人，特别喜欢debug，特别喜欢在命令行里敲东西，所以也顺便解决了这个问题，给大家分享一下。 首先，我们来重现一下从安装MySQL开始的整个过程。 1、在mysql官网下载MySQL的dmg安装包：https://dev.mysql.com/downloads/mysql/ 2、dmg文件下载好之后，双击安装，注意到最后一步的时候，会弹出一个提示框： root@localhost 后面的W:ivGGB5lrdS 这个是MySQL安装时给你的初始密码，这个很重要，一定要记下来。 3、启动MySQL：进入Mac的系统偏好设置 4、启好MySQL之后，我选择了Sequel pro这个软件来操作数据库。 这时候，就会出现之前的两个错误，其中前文提到的error1的意思是你的MySQL 账号密码有错，我一开始在laravel项目的.env文件中设置好了数据库相关的配置，所以直接输入的是.env文件中的配置，然后就会提示 Unable to connect to host 127.0.0.1 because access was denied. Double-check your username and password and ensure that access from your current location is permitted. MySQL said: Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES) 另外error2的错误中，错误提示的字面意思是：password has expired，其实意思是你不可以用刚才安装好MySQL的初始密码登录，你需要在重置你的MySQL密码，然后用新密码来登录root账户，接下来我们来解决这个问题。 首先在命令行模式下输入MySQL 不出意外的话，你会看到一个提示 mysql command not found 这是因为我们是通过dmg文件包的形式安装的MySQL，系统不知道MySQL这个东西，我们需要在bash文件中加入MySQL路径（我的命令行工具使用的是zsh,每个人用的不一样，但是思路是一样的，就是在bash文件中加入MySQL路径）先打开bash文件，然后添加MySQL路径。 在打开的文件中输入下面这行命令，保存后退出即可在命令行中使用MySQL命令。 export PATH=$PATH:/usr/local/mysql/bin 之后，我们需要重置MySQL root 账户的密码，在命令行中输入 mysql -u root -p 然后输入MySQL提供的那个初始密码，如果出现如下提示，说明我们进入了MySQL的设置项 这时，我们在 mysql &gt;后面输入 SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;你想要设置的root账户的新密码&apos;); 当看到 就表示重置密码成功，然后我们打开Sequel pro输入root账号和新密码时，就可以使用了。]]></content>
@@ -72,5 +64,13 @@
     <title><![CDATA[正则学习笔记]]></title>
     <url>%2F2017%2F08%2F17%2F%E6%AD%A3%E5%88%99%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%2F</url>
     <content type="text"><![CDATA[正则学习笔记##符号 ^ ：脱字符 表示求反的概念&amp;匹配开头的字符。 例如[^abc]：表示除了a、b、c之外的任意字符。 [ ]：表示可以是中括号中的任何一个字符。 例如[abc]：表示匹配a、b、c中的任何一个； { }：表示匹配数量。 例如：/b{m,n}/表示匹配字符串中b出现最少m次，最多n次的情况。 | ：管道符，表示其中任何之一。 例如：（1|a|9）表示可以使1、a、9三个字符串中的任何一个。]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[Greet]]></title>
+    <url>%2F2016%2F10%2F02%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[Perhaps very boring,but this is way the front end needs one stepped pit ^-^]]></content>
+      <tags>
+        <tag>感想</tag>
+      </tags>
   </entry>
 </search>
