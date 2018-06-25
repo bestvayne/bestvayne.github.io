@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[wordcup 开发手记]]></title>
+    <url>%2F2018%2F06%2F22%2Fwordcup%20%E5%BC%80%E5%8F%91%E6%89%8B%E8%AE%B0%2F</url>
+    <content type="text"><![CDATA[利用leancloud内置方法skip()分段加载数据1234567891011121314151617181920212223242526272829303132333435&lt;!-- 初始化相关配置 --&gt;var i = 0；var goals = [];function () &#123; &lt;!-- 创建查询实例 （取得goals中所有数据）--&gt; var query = new AV.Query('goals'); &lt;!-- 连表查询 通过goals表中的goal_game属性的属性值，去获取另外一张表中对应的单条数据 --&gt; query.include('goal_game'); &lt;!-- 将查询到的goals表中的数据依照createdAt属性倒序排列 --&gt; query.descending("createdAt"); &lt;!-- 需要跳过的数据条数计数器 --&gt; i += 5; &lt;!-- leancloud内置方法，skip（i） 表示在云端本次获取数据时，需要跳过i条数据 --&gt; query.skip(i); &lt;!-- 获取跳过i条数据之后的本次获取的数据中的5条 --&gt; query.limit(5); query.find().then(function(result)&#123; &lt;!-- 将获取到的5条数据依次添加到预先定义的数组中 --&gt; for (var j = 0; j &lt; result.length; j++) &#123; goals.push(result[j].attributes); &#125; return goals; &#125;).then(goals =&gt; this.setData(&#123; goals &#125;)).catch(error =&gt; console.log(error)); &lt;!-- 将goals数组设置到小程序当前Page的data中 --&gt; &#125; 附:微信小程序性能调优探索]]></content>
+      <tags>
+        <tag>小程序</tag>
+        <tag>miniprogram</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Greet]]></title>
+    <url>%2F2018%2F02%2F27%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[Perhaps very boring,but this is way the front end needs one stepped pit ^-^]]></content>
+      <tags>
+        <tag>感想</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Mac下通过DMG文件安装MySQL之后。。。。]]></title>
+    <url>%2F2018%2F02%2F09%2FMac%E4%B8%8B%E9%80%9A%E8%BF%87DMG%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85MySQL%E4%B9%8B%E5%90%8E%E3%80%82%E3%80%82%E3%80%82%E3%80%82%2F</url>
+    <content type="text"><![CDATA[Mac下通过DMG文件安装MySQL 之后。。。。你可能会遇到这两个头疼的提示： error1Unable to connect to host 127.0.0.1 because access was denied. Double-check your username and password and ensure that access from your current location is permitted. MySQL said: Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES) error2Unable to connect to host 127.0.0.1, or the request timed out. Be sure that the address is correct and that you have the necessary privileges, or try increasing the connection timeout (currently 10 seconds). MySQL said: Your password has expired. To log in you must change it using a client that supports expired passwords. 不是每个人都会碰到这个问题，但是我确实都碰到了，这里面坑也比较多，独立解决这些问题，也是对你本身基础知识的一次检查，所以我更倾向于大家先独立排查，如果还是没解决再来看下文。另外说一句，如果你是在laravel官方推荐的Homestead环境中的话，可能不会碰到这几个问题。但是我是一个比较爱折腾的人，特别喜欢debug，特别喜欢在命令行里敲东西，所以也顺便解决了这个问题，给大家分享一下。 首先，我们来重现一下从安装MySQL开始的整个过程。 1、在mysql官网下载MySQL的dmg安装包：https://dev.mysql.com/downloads/mysql/ 2、dmg文件下载好之后，双击安装，注意到最后一步的时候，会弹出一个提示框： root@localhost 后面的W:ivGGB5lrdS 这个是MySQL安装时给你的初始密码，这个很重要，一定要记下来。 3、启动MySQL：进入Mac的系统偏好设置 4、启好MySQL之后，我选择了Sequel pro这个软件来操作数据库。 这时候，就会出现之前的两个错误，其中前文提到的error1的意思是你的MySQL 账号密码有错，我一开始在laravel项目的.env文件中设置好了数据库相关的配置，所以直接输入的是.env文件中的配置，然后就会提示 Unable to connect to host 127.0.0.1 because access was denied. Double-check your username and password and ensure that access from your current location is permitted. MySQL said: Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES) 另外error2的错误中，错误提示的字面意思是：password has expired，其实意思是你不可以用刚才安装好MySQL的初始密码登录，你需要在重置你的MySQL密码，然后用新密码来登录root账户，接下来我们来解决这个问题。 首先在命令行模式下输入MySQL 不出意外的话，你会看到一个提示 mysql command not found 这是因为我们是通过dmg文件包的形式安装的MySQL，系统不知道MySQL这个东西，我们需要在bash文件中加入MySQL路径（我的命令行工具使用的是zsh,每个人用的不一样，但是思路是一样的，就是在bash文件中加入MySQL路径）先打开bash文件，然后添加MySQL路径。 在打开的文件中输入下面这行命令，保存后退出即可在命令行中使用MySQL命令。 export PATH=$PATH:/usr/local/mysql/bin 之后，我们需要重置MySQL root 账户的密码，在命令行中输入 mysql -u root -p 然后输入MySQL提供的那个初始密码，如果出现如下提示，说明我们进入了MySQL的设置项 这时，我们在 mysql &gt;后面输入 SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;你想要设置的root账户的新密码&apos;); 当看到 就表示重置密码成功，然后我们打开Sequel pro输入root账号和新密码时，就可以使用了。]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[php 基本知识]]></title>
+    <url>%2F2018%2F02%2F06%2Fphp-%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86%2F</url>
+    <content type="text"><![CDATA[php 基本知识-&gt; 表示调用class 中的属性:: 表示调用class 中的方法 example: $xx-&gt;yy 对象 xx 的 yy 属性 $xx-&gt;zz() 对象 xx 的 zz 方法 class name (){ //定义一个属性 值为字符串 vayne public $name = &quot;vayne&quot;; //定义一个方法 answer() public function question(){ echo &quot;my name is :&quot; $name; } } //实例化 一个类； $obj = new name(); //调用类中的属性name echo $obj -&gt;name;//输出vayne; //调用类中的方法并传入一个参数 $obj -&gt;answer(&apos;姚曦&apos;); &lt;?php // 费了我好大功夫, 把这些都总结到一个例子里面了 // PHP5.3 PHP5.4 PHP5.5 测试通过 class A { //类常量 const constValue = &quot;constValue\n&quot;; //类属性 public $property = &quot;properties\n&quot;; //静态属性 static public $staticProperty = &quot;staticProperty\n&quot;; //普通函数 public function func() { } //静态函数 static public function staticFunc() { } } $xxoo = new A; //访问实例的属性 print $xxoo-&gt;property; //访问实例的函数 print $xxoo-&gt;func(); //也可以借助实例来访问静态成员 //访问函数要用箭头，属性要用双冒号 print $xxoo-&gt;staticFunc(); print $xxoo::$staticProperty; //如果不借助实例，那就直接用类名加双冒号 print A::staticFunc(); print A::constValue; //静态属性要加美元符号 print A::$staticProperty; //继承类A class B extends A { //覆盖父类的属性 public $property = &quot;covered-properties\n&quot;; //覆盖父类的静态属性 static public $staitcProperty = &quot;covered-staitcProperties\n&quot;; //覆盖父类的函数 public function func() { //访问自己的属性 print $this-&gt;property; //访问从父类继承来的静态属性 print self::$staticProperty; //访问自己的(静态)函数 print $this-&gt;staticFunc(); //强制指定访问父类(而不是自己)的函数 print parent::func(); } //覆盖父类的静态函数 static public function staticFunc() { //因为没有$this, 所以用self访问自己的静态属性 print self::$staitcProperty; } } //运行一下上面的例子 $xxoo = new B; $xxoo-&gt;func(); B::staticFunc();]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[electron 打包为dmg文件]]></title>
+    <url>%2F2018%2F01%2F17%2Felectron-%E6%89%93%E5%8C%85%E4%B8%BAdmg%E6%96%87%E4%BB%B6%2F</url>
+    <content type="text"><![CDATA[electron 打包 先安装 package 打包工具 npm install electron-package -g 在当前目录下运行 electron-packager . 生成 appname-darwin-x64文件夹，文件夹中会生成应用app（类似于安装Atom时的状态），直接将文件移入Mac中的Application，双击打开即可使用 打包为dmg文件先安装 dmg 文件打包工具npm i electron-installer-dmg -g 之后执行命令生成dmg文件 electron-installer-dmg [appname-darwin-x64路径] [生成的dmg文件名称]]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>%2F2018%2F01%2F16%2F15160691536191%2F</url>
+    <content type="text"><![CDATA[快扔掉你那辣眼睛的shell Part2oh-my-zsh的安装和介绍]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[Zsh 添加环境变量示例]]></title>
+    <url>%2F2018%2F01%2F15%2FZsh-%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%A4%BA%E4%BE%8B%2F</url>
+    <content type="text"><![CDATA[给 Linux/Unix 系统增加环境变量，是使用 export 命令。 为了永久性生效，则需要考虑加入到登录的 profile中。 1export PATH=$HOME/.composer/vendor/bin:$PATH]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[快扔掉你那辣眼睛的shell Part1]]></title>
+    <url>%2F2018%2F01%2F12%2F%E5%BF%AB%E6%89%94%E6%8E%89%E4%BD%A0%E9%82%A3%E8%BE%A3%E7%9C%BC%E7%9D%9B%E7%9A%84shell-Part1%2F</url>
+    <content type="text"><![CDATA[zsh 安装教程如果你是全新的Macbook 或者苹果的Mac产品，那么你需要在你的电脑上先安装 Homebrew。 实际上，你的Mac会自带一些基础的开发工具，这其中就包括了zsh，不过一般不会是最新版本，在本机安装了homebrew之后，我们都会通过homebrew来安装以及更新这些软件。 brew install zsh 安装成功以后可以通过下面这个命令查看 zsh –version 另外多说一句，zsh --version是显示你机子上的zsh版本，并不意味着你使用的就是这个版本，如果需要查看你当前使用的zsh版本，可以通过下面这个命令查看 echo $ZSH_VERSION 完成安装以后，我们需要修改默认的shell，将其改为zsh， 先运行命令 open /etc/shells 打开shells的文档，发现最后一行已经有了/bin/zsh，说明zsh已经被写入到了shell文件中，如果没有/bin/zsh，则需要我们手动在文件末尾添加/bin/zsh，如下图（示例） 保存好shells文件后，我们执行以下命令 chsh -s /usr/local/bin/zsh 告诉电脑以后使用zsh作为你的shell，然后，我们重新打开命令行工具，如下图显示即表示zsh安装成功 #####下一期会给大家带来zsh的一个标配开源配置管理框架 -&gt; oh-my-zsh，它提供了大量实用的功能，主题等。]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[How to make graceful ppt]]></title>
+    <url>%2F2017%2F12%2F28%2FHow-to-make-graceful-ppt%2F</url>
+    <content type="text"><![CDATA[How to make graceful ppt1.配合场景2.结合内容3.工具推荐 ##ppt需要场景化的演绎ppt是文本+图片的信息传达。我们需要根据讲演现场的环境大小、灯光的色调冷暖、现场观众的氛围估计，会场装修的风格，以及切合主题的ppt风格，相互配合一同演绎出你的观点。 关于字体大小，一般的ppt字号会选择14~16（适用于团队内部小的分享和讨论），大型会场需要根据场地的大小来灵活调节，尽量保证最后一排的观众可以清晰的看到文字（后面会详细说）。 另外同一页的ppt中文字的字体需要保证统一性，整个ppt的颜色选择需要有统一性，颜色的对比度不应该太强烈，视觉尽量柔和，配合灯光，屏幕等等场地因素。 错误示范 场景的另一个含义是指，将ppt想要表达的内容场景化，或者将抽象的内容视觉化，利用结构图、流程图、组合图等等图像化的东西构建足够具象化的场景以便于理解和传递信息。 这其中又需要注意3点：美观、视觉化、逻辑。 ##所有的视觉都为内容服务颜色的选择，字体选择，单页ppt内容的位置排列，都应该是为了向听众更好的传达观点和思想。 举例：如果你是做产品的介绍和发布，那么将产品的特性醒目的放在中间位置就是最好的呈现方式。 正确示范 简洁 把PPT里面干扰视觉、画蛇添足的多余点缀因素去掉。 比例 16：9的ppt单页比例，更适应主流的宽屏，看起来更加专业。 间距 根据现场的环境，场地等等原因，适量调节字与字的间距，字与图的间距。 字体 尽量在PPT中使用微软雅黑、思源黑体等无衬线字体。（除非是用自己的笔记本电脑做演示，其余情况尽量使用前文提到的字体，因为公共的演示笔记本不会有特殊字体。） 主色 有且只有一种，背景为主色，尽量单一，暗色为主。 辅色 用在icon，标题，形状等上面，用于highlight你想要的内容，以亮色为主即可。 示例 可视 数据的可视化，能帮助听众更好的理解你的观点。表格就是其中一种，但是在使用表格是，切忌直接放置截图，并且表格的各个要素尽量和ppt模板保持统一。 icon的合理使用也是让你的观点可视的一个好方法，在一份ppt中也要注意所有的icon保持一致，要么全部使用线性icon要么就全部使用填充性icon。 ##神兵利器 文字云 https://wordart.com/ 百度脑图 http://naotu.baidu.com Adobe官方的配色网站 https://color.adobe.com/zh/ 配色库 http://colorhunt.co 各种文档格式转换 http://smallpdf.com 百度图说图表制作 http://tushuo.baidu.com/ 快速制图的网站创客贴 http://www.chuangkit.com/ icons http://iconfont.cn/ svg &amp; loading https://loading.io/]]></content>
+      <tags>
+        <tag>方法论</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[几个好玩的动画库]]></title>
+    <url>%2F2017%2F09%2F28%2F%E5%87%A0%E4%B8%AA%E5%A5%BD%E7%8E%A9%E7%9A%84%E5%8A%A8%E7%94%BB%E5%BA%93%2F</url>
+    <content type="text"><![CDATA[animate.css 一个跨浏览器的CSS动画库。简单易用易上手。 move.js 极小的 JavaScript 库,支持 CSS3 的动画效果,非常简单优雅。 TweenJS 是一个简单但强大的 Javascript 动画库。CreateJS 套件的一部分。 bounce.js 一个用于制作漂亮的 CSS3 关键帧动画的 JavaScript库,使用其特有的方式生成的动画效果 Swipe 号称最精确的Slider触摸库，专为移动设备优化。 tween.js 一款可生成平滑动画效果的js动画库。tween.js允许你以平滑的方式修改元素的属性值。它可以通过设置生成各种类似CSS3的动画效果。 parallax.js轻量级的的视差引擎，能对智能设备的方向作出反应。 onepage-scroll 一款带有背景视觉差效果的jQuery整页滚动特效插件 Velocity 是一款和jQuery的$.animate()有相同API的动画引擎。很适合移动端的动画开发，还打包了颜色动画，转换，循环，easing效果，类动画、滚动等功能]]></content>
+      <tags>
+        <tag>Swag</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Mac升级本机自带PHP的版本]]></title>
+    <url>%2F2017%2F08%2F18%2FMac%E5%8D%87%E7%BA%A7%E6%9C%AC%E6%9C%BA%E8%87%AA%E5%B8%A6%E7%9A%84PHP%2F</url>
+    <content type="text"><![CDATA[mac升级自带的PHP版本php –version →查看当前版本curl -s http://php-osx.liip.ch/install.sh | bash -s 7.0 →安装指定版本 如果当前本机有旧版本，那么新版本不会覆盖原版本，需要手动替换掉旧版本，如下： sudo vi ~/.bashrc → 修改系统环境变量增加下面语句export PATH=”/usr/local/bin:/usr/local/sbin:$PATH” OK，结束]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[正则学习笔记]]></title>
+    <url>%2F2017%2F08%2F17%2F%E6%AD%A3%E5%88%99%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%2F</url>
+    <content type="text"><![CDATA[正则学习笔记##符号 ^ ：脱字符 表示求反的概念&amp;匹配开头的字符。 例如[^abc]：表示除了a、b、c之外的任意字符。 [ ]：表示可以是中括号中的任何一个字符。 例如[abc]：表示匹配a、b、c中的任何一个； { }：表示匹配数量。 例如：/b{m,n}/表示匹配字符串中b出现最少m次，最多n次的情况。 | ：管道符，表示其中任何之一。 例如：（1|a|9）表示可以使1、a、9三个字符串中的任何一个。]]></content>
+  </entry>
+</search>
