@@ -87,7 +87,7 @@
 <meta property="og:description" content="在小程序中使用Echart图表 Echart UI构建（柱状图） Echart 假数据 Echart 动态设置数据                                                1、柱状图UI示例 12345678910111213141516171819202122232425262728293031323334353637383940414243444546//">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2018/07/12/15313795874819/media/15313795874819/15331025904955.jpg">
-<meta property="og:updated_time" content="2018-08-01T06:22:30.000Z">
+<meta property="og:updated_time" content="2018-08-01T06:25:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在小程序中使用Echart图表">
 <meta name="twitter:description" content="在小程序中使用Echart图表 Echart UI构建（柱状图） Echart 假数据 Echart 动态设置数据                                                1、柱状图UI示例 12345678910111213141516171819202122232425262728293031323334353637383940414243444546//">
@@ -400,7 +400,7 @@
 </blockquote>
 <p>ok直接看代码：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> hostTeamInfo = []<span class="comment">//获取的数据</span></span><br><span class="line">chartOption.series[<span class="number">1</span>].data = hostTeamInfo<span class="comment">//根据前文，设置左侧的数据</span></span><br></pre></td></tr></table></figure>
-<p>根据小程序的指导文档，这部分代码需要在page()声明周期中完成，至于是在onLoad还是onReady中，需要各位根据实际情况来决定</p>
+<p>根据小程序的指导文档，这部分代码需要在page()生命周期中完成，至于是在onLoad还是onReady中，需要各位根据实际情况来决定</p>
 <p>效果图：<br>    <img src="media/15313795874819/15331025904955.jpg" alt=""></p>
 
       

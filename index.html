@@ -402,7 +402,7 @@
 </blockquote>
 <p>ok直接看代码：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> hostTeamInfo = []<span class="comment">//获取的数据</span></span><br><span class="line">chartOption.series[<span class="number">1</span>].data = hostTeamInfo<span class="comment">//根据前文，设置左侧的数据</span></span><br></pre></td></tr></table></figure>
-<p>根据小程序的指导文档，这部分代码需要在page()声明周期中完成，至于是在onLoad还是onReady中，需要各位根据实际情况来决定</p>
+<p>根据小程序的指导文档，这部分代码需要在page()生命周期中完成，至于是在onLoad还是onReady中，需要各位根据实际情况来决定</p>
 <p>效果图：<br>    <img src="media/15313795874819/15331025904955.jpg" alt=""></p>
 
           
