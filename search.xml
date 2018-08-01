@@ -4,6 +4,10 @@
     <title><![CDATA[在小程序中使用Echart图表]]></title>
     <url>%2F2018%2F07%2F12%2F%E5%9C%A8%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%B8%AD%E4%BD%BF%E7%94%A8Echart%E5%9B%BE%E8%A1%A8%2F</url>
     <content type="text"><![CDATA[在小程序中使用Echart图表 Echart UI构建（柱状图） Echart 假数据 Echart 动态设置数据 1、柱状图UI示例 1234567891011121314151617181920212223242526272829303132333435363738394041424344// Echart config，包括init data 和style及数据类型var option = &#123; animation: false,//提高页面加载速度，关闭echart的动画 grid: [ //grid section UI ], xAxis: [ //xAxis section UI ... ], yAxis: [ //yAxis section UI ... ], series: [ &#123; //左侧坐标轴UI data: [100, 100, 100, 100, 100], &#125;, &#123; //左侧柱状图 UI 及数据 data: [66, 54, 87, 78, 87], &#125;, &#123; //右侧坐标轴UI data: [100, 100, 100, 100, 100], &#125;, &#123; //右侧柱状图 UI 及数据 data: [84, 87, 86, 76, 76], &#125;, ]&#125;// 初始化Echart图表UIfunction initChart(canvas, width, height) &#123; const chart = echarts.init(canvas, null, &#123; width: width, height: height &#125;) canvas.setChart(chart) chart.setOption(option) return chart&#125; 以上就是利用echart图表插件在小程序中生成一个我们需要的柱状图用以展示我们需要表达给用户的数据表。 当然，在实际的开发中，所有的数据都是通过获取数据库中的数据，然后根据数据生成，而不是写死在series[]中，那么如何将ajax或者其他方式获取到的数据传入我们的UI中呢？ Echart的文档告诉我们： ###数据的动态更新ECharts 由数据驱动，数据的改变驱动图表展现的改变，因此动态数据的实现也变得异常简单。 所有数据的更新都通过 setOption实现，你只需要定时获取数据，setOption 填入数据，而不用考虑数据到底产生了那些变化，ECharts 会找到两组数据之间的差异然后通过合适的动画去表现数据的变化。 也就是上面示例代码中的这个方法 chart.setOption(option) ok直接看代码： 12var hostTeamInfo = []//获取的数据option.series[1].data = hostTeamInfo//根据前文，设置左侧的数据 根据小程序的指导文档，这部分代码需要在page()生命周期中完成，至于是在onLoad还是onReady中，需要各位根据实际情况来决定 效果图：]]></content>
+      <tags>
+        <tag>小程序</tag>
+        <tag>miniprogram</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[wordcup 开发手记]]></title>
@@ -18,6 +22,11 @@
     <title><![CDATA[Mac下通过DMG文件安装MySQL之后。。。。]]></title>
     <url>%2F2018%2F02%2F09%2FMac%E4%B8%8B%E9%80%9A%E8%BF%87DMG%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85MySQL%E4%B9%8B%E5%90%8E%E3%80%82%E3%80%82%E3%80%82%E3%80%82%2F</url>
     <content type="text"><![CDATA[Mac下通过DMG文件安装MySQL 之后。。。。你可能会遇到这两个头疼的提示： error1Unable to connect to host 127.0.0.1 because access was denied. Double-check your username and password and ensure that access from your current location is permitted. MySQL said: Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES) error2Unable to connect to host 127.0.0.1, or the request timed out. Be sure that the address is correct and that you have the necessary privileges, or try increasing the connection timeout (currently 10 seconds). MySQL said: Your password has expired. To log in you must change it using a client that supports expired passwords. 不是每个人都会碰到这个问题，但是我确实都碰到了，这里面坑也比较多，独立解决这些问题，也是对你本身基础知识的一次检查，所以我更倾向于大家先独立排查，如果还是没解决再来看下文。另外说一句，如果你是在laravel官方推荐的Homestead环境中的话，可能不会碰到这几个问题。但是我是一个比较爱折腾的人，特别喜欢debug，特别喜欢在命令行里敲东西，所以也顺便解决了这个问题，给大家分享一下。 首先，我们来重现一下从安装MySQL开始的整个过程。 1、在mysql官网下载MySQL的dmg安装包：https://dev.mysql.com/downloads/mysql/ 2、dmg文件下载好之后，双击安装，注意到最后一步的时候，会弹出一个提示框： root@localhost 后面的W:ivGGB5lrdS 这个是MySQL安装时给你的初始密码，这个很重要，一定要记下来。 3、启动MySQL：进入Mac的系统偏好设置 4、启好MySQL之后，我选择了Sequel pro这个软件来操作数据库。 这时候，就会出现之前的两个错误，其中前文提到的error1的意思是你的MySQL 账号密码有错，我一开始在laravel项目的.env文件中设置好了数据库相关的配置，所以直接输入的是.env文件中的配置，然后就会提示 Unable to connect to host 127.0.0.1 because access was denied. Double-check your username and password and ensure that access from your current location is permitted. MySQL said: Access denied for user &apos;root&apos;@&apos;localhost&apos; (using password: YES) 另外error2的错误中，错误提示的字面意思是：password has expired，其实意思是你不可以用刚才安装好MySQL的初始密码登录，你需要在重置你的MySQL密码，然后用新密码来登录root账户，接下来我们来解决这个问题。 首先在命令行模式下输入MySQL 不出意外的话，你会看到一个提示 mysql command not found 这是因为我们是通过dmg文件包的形式安装的MySQL，系统不知道MySQL这个东西，我们需要在bash文件中加入MySQL路径（我的命令行工具使用的是zsh,每个人用的不一样，但是思路是一样的，就是在bash文件中加入MySQL路径）先打开bash文件，然后添加MySQL路径。 在打开的文件中输入下面这行命令，保存后退出即可在命令行中使用MySQL命令。 export PATH=$PATH:/usr/local/mysql/bin 之后，我们需要重置MySQL root 账户的密码，在命令行中输入 mysql -u root -p 然后输入MySQL提供的那个初始密码，如果出现如下提示，说明我们进入了MySQL的设置项 这时，我们在 mysql &gt;后面输入 SET PASSWORD FOR &apos;root&apos;@&apos;localhost&apos; = PASSWORD(&apos;你想要设置的root账户的新密码&apos;); 当看到 就表示重置密码成功，然后我们打开Sequel pro输入root账号和新密码时，就可以使用了。]]></content>
+      <tags>
+        <tag>tool</tag>
+        <tag>DB</tag>
+        <tag>MacOS</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[php 基本知识]]></title>
@@ -38,11 +47,21 @@
     <title><![CDATA[Zsh 添加环境变量示例]]></title>
     <url>%2F2018%2F01%2F15%2FZsh-%E6%B7%BB%E5%8A%A0%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%A4%BA%E4%BE%8B%2F</url>
     <content type="text"><![CDATA[给 Linux/Unix 系统增加环境变量，是使用 export 命令。 为了永久性生效，则需要考虑加入到登录的 profile中。 1export PATH=$HOME/.composer/vendor/bin:$PATH]]></content>
+      <tags>
+        <tag>tool</tag>
+        <tag>MacOS</tag>
+        <tag>command</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[快扔掉你那辣眼睛的shell Part1]]></title>
     <url>%2F2018%2F01%2F12%2F%E5%BF%AB%E6%89%94%E6%8E%89%E4%BD%A0%E9%82%A3%E8%BE%A3%E7%9C%BC%E7%9D%9B%E7%9A%84shell-Part1%2F</url>
     <content type="text"><![CDATA[zsh 安装教程如果你是全新的Macbook 或者苹果的Mac产品，那么你需要在你的电脑上先安装 Homebrew。 实际上，你的Mac会自带一些基础的开发工具，这其中就包括了zsh，不过一般不会是最新版本，在本机安装了homebrew之后，我们都会通过homebrew来安装以及更新这些软件。 brew install zsh 安装成功以后可以通过下面这个命令查看 zsh –version 另外多说一句，zsh --version是显示你机子上的zsh版本，并不意味着你使用的就是这个版本，如果需要查看你当前使用的zsh版本，可以通过下面这个命令查看 echo $ZSH_VERSION 完成安装以后，我们需要修改默认的shell，将其改为zsh， 先运行命令 open /etc/shells 打开shells的文档，发现最后一行已经有了/bin/zsh，说明zsh已经被写入到了shell文件中，如果没有/bin/zsh，则需要我们手动在文件末尾添加/bin/zsh，如下图（示例） 保存好shells文件后，我们执行以下命令 chsh -s /usr/local/bin/zsh 告诉电脑以后使用zsh作为你的shell，然后，我们重新打开命令行工具，如下图显示即表示zsh安装成功 #####下一期会给大家带来zsh的一个标配开源配置管理框架 -&gt; oh-my-zsh，它提供了大量实用的功能，主题等。]]></content>
+      <tags>
+        <tag>tool</tag>
+        <tag>MacOS</tag>
+        <tag>command</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[How to make graceful ppt]]></title>
@@ -64,6 +83,11 @@
     <title><![CDATA[Mac升级本机自带PHP的版本]]></title>
     <url>%2F2017%2F08%2F18%2FMac%E5%8D%87%E7%BA%A7%E6%9C%AC%E6%9C%BA%E8%87%AA%E5%B8%A6%E7%9A%84PHP%2F</url>
     <content type="text"><![CDATA[mac升级自带的PHP版本php –version →查看当前版本curl -s http://php-osx.liip.ch/install.sh | bash -s 7.0 →安装指定版本 如果当前本机有旧版本，那么新版本不会覆盖原版本，需要手动替换掉旧版本，如下： sudo vi ~/.bashrc → 修改系统环境变量增加下面语句export PATH=”/usr/local/bin:/usr/local/sbin:$PATH” OK，结束]]></content>
+      <tags>
+        <tag>tool</tag>
+        <tag>DB</tag>
+        <tag>MacOS</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[正则学习笔记]]></title>
